@@ -66,6 +66,63 @@ Build and push (`ghcr.io/<you>/syncroll:1.0`), then reference that in `image:`.
 Add the registry under Portainer → **Registries** if it is private. Best if the
 Docker host is not the machine you develop on.
 
+### Path D — Deploy from the console now, adopt into Portainer later
+
+Perfectly valid: Portainer discovers whatever Docker is already running, so you
+can ship it from an SSH session today and wire up the UI whenever. **Use
+`docker compose`, not `docker run`** — see §1.1 for why.
+
+```bash
+mkdir -p /opt/syncroll          # copy the project here (scp / rsync / git clone)
+cd /opt/syncroll
+docker network ls | grep -i -E 'npm|proxy'      # find the NPM network
+```
+
+Write `/opt/syncroll/docker-compose.yml` with the content from §2 (using
+`build: .`, since the source is right there), then:
+
+```bash
+docker compose up -d --build
+```
+
+Verify without publishing a port:
+
+```bash
+docker compose ps
+docker compose logs -f syncroll
+docker exec syncroll python -c "import urllib.request;print(urllib.request.urlopen('http://127.0.0.1:8000/healthz').read())"
+```
+
+That last command should print `b'{"ok":true}'`. Then go straight to §4 and set
+up the proxy host in NPM — NPM does not care how the container was started.
+
+### 1.1 What Portainer can and cannot do with it afterwards
+
+| Started with | How it appears in Portainer | What you get |
+|---|---|---|
+| `docker run` | **Containers** list only | Logs, console, stats, stop/restart/remove. No stack grouping, no editor. |
+| `docker compose up -d` | **Stacks**, marked *external* / limited | Same, plus the stack grouping. The **Editor** tab is unavailable on most CE versions, because the compose file lives on the host disk and Portainer has no copy of it. |
+
+So "adopting" is really two different things:
+
+- **Just managing it** (logs, console, restart, redeploy by hand) — works
+  immediately, nothing to do. This is enough for most people.
+- **Making it a fully Portainer-managed stack** (editable compose in the web
+  editor, Pull-and-redeploy button) — Portainer has to own the stack definition,
+  which means recreating it once:
+
+  ```bash
+  cd /opt/syncroll && docker compose down
+  ```
+
+  then create the stack in Portainer per Path A or B. This is cheap for Syncroll
+  specifically: there are no volumes and no database, so nothing is lost except
+  the rooms that happen to be live at that moment. Do it between games.
+
+Keep the host directory at `/opt/syncroll` and the stack name `syncroll` in both
+places, so the container name and network wiring stay identical across the
+switch and NPM's proxy host keeps working untouched.
+
 ---
 
 ## 2. The compose file

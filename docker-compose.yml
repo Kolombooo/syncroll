@@ -20,4 +20,4 @@ services:
 networks:
   npm:
     external: true
-    name: syncrolls
+    name: proxy_network
