@@ -1,0 +1,8 @@
+{
+  "short_name": "Syncroll",
+  "name": "Syncroll",
+  "start_url": "https://syncroll.jonasholub.cz/",
+  "display": "standalone",
+  "theme_color": "black",
+  "background_color": "white"
+}
