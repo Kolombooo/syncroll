@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Syncroll</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎲</text></svg>">
+</head>
+<body>
+
+<!-- ------------------------------------------------ Home -->
+<section id="home" class="screen">
+  <h1 class="brand">SYNCROLL</h1>
+  <p class="tagline">Everyone taps ready. The die rolls for all phones at once.</p>
+
+  <div class="home-actions">
+    <button id="btn-create" class="action">Create room</button>
+    <form id="join-form" class="join">
+      <input id="join-code" inputmode="numeric" pattern="[0-9]*" maxlength="4"
+             autocomplete="off" placeholder="0000" aria-label="Room code">
+      <button id="btn-join" class="action" type="submit">Join</button>
+    </form>
+  </div>
+  <p id="home-error" class="home-error" role="alert"></p>
+</section>
+
+<!-- ------------------------------------------------ Room -->
+<section id="room" class="screen" hidden>
+  <main class="stage">
+
+    <!-- left: the big button -->
+    <div class="left">
+      <button id="ready" class="ready" aria-pressed="false">
+        <span class="ready-mark" id="ready-mark" aria-hidden="true">○</span>
+        <span class="ready-label" id="ready-label">NOT READY</span>
+        <span class="ready-count" id="ready-count">0 / 0 ready</span>
+      </button>
+      <p id="hint" class="hint"></p>
+    </div>
+
+    <!-- right: die + result + history -->
+    <aside class="right">
+      <div class="right-head">
+        <div class="room-code">
+          <span class="cap">ROOM</span>
+          <strong id="code">----</strong>
+        </div>
+        <button id="btn-leave" class="ghost">Leave</button>
+      </div>
+
+      <div class="die-row">
+        <span class="cap">DIE</span>
+        <span id="die-label" class="die-label">D6</span>
+        <div id="die-controls" class="die-controls" hidden>
+          <button class="chip" data-sides="2">D2</button>
+          <button class="chip" data-sides="4">D4</button>
+          <button class="chip" data-sides="6">D6</button>
+          <button class="chip" data-sides="20">D20</button>
+          <button class="chip" data-sides="catan">Catan 2d6</button>
+          <form id="custom-form" class="custom">
+            <input id="custom-sides" inputmode="numeric" pattern="[0-9]*" maxlength="4"
+                   placeholder="#" aria-label="Custom number of sides">
+            <button class="chip" type="submit">Set</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="result-value" id="result-value">--</div>
+        <div class="result-sub" id="result-sub">No roll yet</div>
+      </div>
+
+      <div class="history-wrap">
+        <span class="cap">HISTORY</span>
+        <ol id="history" class="history"></ol>
+      </div>
+    </aside>
+  </main>
+
+  <!-- bottom: players -->
+  <footer class="players-bar">
+    <span class="cap">PLAYERS</span>
+    <ul id="players" class="players"></ul>
+  </footer>
+</section>
+
+<div id="status" class="status" hidden role="status">Reconnecting…</div>
+
+<div id="lost" class="lost" hidden role="alertdialog" aria-labelledby="lost-text">
+  <div class="lost-box">
+    <p id="lost-text">Session lost.</p>
+    <button id="btn-home" class="action">Back to home</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

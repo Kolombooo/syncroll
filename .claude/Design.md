@@ -1,0 +1,3 @@
+- Use a really simple design with a black page. Landscape oreintation.
+- Button is on the left, dice history is on the right (as well as the selected dice type)
+- In the bottom, players and their status is shown
