@@ -1,0 +1,23 @@
+services:
+  syncroll:
+    build: .                    # Path B/C: replace with  image: syncroll:1.0
+    container_name: syncroll
+    restart: unless-stopped
+    environment:
+      # Only needed if you ever want correct client IPs / scheme server-side.
+      # uvicorn otherwise ignores X-Forwarded-* from a non-localhost peer.
+      FORWARDED_ALLOW_IPS: "*"
+    networks:
+      - npm
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  npm:
+    external: true
+    name: syncrolls
